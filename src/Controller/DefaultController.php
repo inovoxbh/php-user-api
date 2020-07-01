@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,9 +14,13 @@ class DefaultController extends AbstractController
         $sobrenome = $request->query->get('sobrenome');
         /* para testar: http://localhost:8080/?nome=lucas&sobrenome=alcantara */
 
-        return $this->render('base.html.twig',[
-            'nome' => $nome,
-            'sobrenome' => $sobrenome
+//        return $this->render('base.html.twig',[
+//            'nome' => $nome,
+//            'sobrenome' => $sobrenome
+//        ]);
+
+        return new JsonResponse([
+            'name' => $request->query->get('nome')
         ]);
     }
 }
