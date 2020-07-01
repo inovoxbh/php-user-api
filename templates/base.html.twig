@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+        <h1>Página em PHP</h1>
+        <h2>Bem vindo {{ nome }} {{ sobrenome }}</h2>
+        <p>Essa é uma página em PHP.</p>
+    </body>
+</html>
