@@ -34,6 +34,7 @@ class UserController
     {
 //        dump(User::class);
         $user = $this->manager->getRepository(User::class)->find($id);
+
         return new JsonResponse($this->userToArray($user));
     }
     private function userToArray(User $user): array
