@@ -23,16 +23,16 @@ class User
      */
     private ?string $email = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private ?\DateTime $createdDate = null;
+//    /**
+//     * @ORM\Column(type="datetime")
+//     */
+//    private ?\DateTime $createdDate = null;
 
     public function __construct(string $name, string $email)
     {
         $this->name = $name;
         $this->email = $email;
-        $this->createdDate = new \DateTime();
+        //$this->createdDate = new \DateTime();
     }
 
     public function getId(): ?int
@@ -60,8 +60,8 @@ class User
         $this->email = $email;
     }
 
-    public function getCreatedDate(): ?\DateTime
-    {
-        return $this->createdDate;
-    }
+//    public function getCreatedDate(): ?\DateTime
+//    {
+//        return $this->createdDate;
+//    }
 }
