@@ -6,24 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    /**
-     * @Route("/")
-     */
-
-    public function index(Request $request): Response {
-        $nome = $request->query->get('nome');
-        $sobrenome = $request->query->get('sobrenome');
-        /* para testar: http://localhost:8080/?nome=lucas&sobrenome=alcantara */
-
-//        return $this->render('base.html.twig',[
-//            'nome' => $nome,
-//            'sobrenome' => $sobrenome
-//        ]);
-
+    public function index(Request $request): Response
+    {
         return new JsonResponse([
             'name' => $request->query->get('nome')
         ]);

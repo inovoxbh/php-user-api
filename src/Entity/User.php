@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity()
  */
@@ -32,7 +35,7 @@ class User
     {
         $this->name = $name;
         $this->email = $email;
-        //$this->createdDate = new \DateTime();
+//        $this->createdDate = new \DateTime();
     }
 
     public function getId(): ?int
