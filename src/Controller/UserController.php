@@ -8,12 +8,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 class UserController extends AbstractController
 {
+    private ValidatorInterface $validator;
     private EntityManagerInterface $manager;
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $manager, ValidatorInterface $validator)
     {
         $this->manager = $manager;
+        $this->validator = $validator;
     }
     /**
      * @Route("/users", methods={"GET"})
@@ -38,11 +43,8 @@ class UserController extends AbstractController
         }
         return new JsonResponse($this->userToArray($user));
     }
-
     /**
      * @Route("/users", methods={"POST"})
-     * @param Request $request
-     * @return Response
      */
     public function createAction(Request $request): Response
     {
@@ -52,62 +54,59 @@ class UserController extends AbstractController
         foreach ($json['telephones'] as $telephone) {
             $user->addTelephone($telephone['number']);
         }
+        $errors = $this->validator->validate($user);
+        if (count($errors) > 0) {
+            $violations = array_map(fn(ConstraintViolationInterface $violation) => [
+                'property' => $violation->getPropertyPath(),
+                'message' => $violation->getMessage()
+            ], iterator_to_array($errors));
+            return new JsonResponse($violations, Response::HTTP_BAD_REQUEST);
+        }
         $this->manager->persist($user);
         $this->manager->flush();
-
-        $id = $user->getId();
-        return new Response('usuario ID #' . $id . ' criado com sucesso.', Response::HTTP_CREATED, [
-            'X-User-Id' => $user->getId(),
+        // enviar email aqui????
+        return new Response('', Response::HTTP_CREATED, [
             'Location' => '/users/' . $user->getId()
         ]);
     }
-
     /**
      * @Route("/users/{id}", methods={"PUT"})
-     * @param Request $request
-     * @param int $id
-     * @return Response
      */
     public function updateAction(Request $request, int $id): Response
     {
         $requestContent = $request->getContent();
         $json = json_decode($requestContent, true);
-
         $user = $this->manager->getRepository(User::class)->find($id);
-
         if (null === $user) {
             throw $this->createNotFoundException('User with ID #' . $id . ' not found');
         }
-
         $user->setName($json['name']);
         $user->setEmail($json['email']);
-
+        $errors = $this->validator->validate($user);
+        if (count($errors) > 0) {
+            $violations = array_map(fn(ConstraintViolationInterface $violation) => [
+                'property' => $violation->getPropertyPath(),
+                'message' => $violation->getMessage()
+            ], iterator_to_array($errors));
+            return new JsonResponse($violations, Response::HTTP_BAD_REQUEST);
+        }
         $this->manager->persist($user);
         $this->manager->flush();
-
-        return new Response('usuario ID #' . $id . ' foi atualizado com sucesso.', Response::HTTP_OK);
+        return new Response('', Response::HTTP_OK);
     }
-
     /**
      * @Route("/users/{id}", methods={"DELETE"})
-     * @param Request $request
-     * @param int $id
-     * @return Response
      */
-    public function deleteAction(int $id): Response
+    public function removeAction(int $id): Response
     {
         $user = $this->manager->getRepository(User::class)->find($id);
-
         if (null === $user) {
             throw $this->createNotFoundException('User with ID #' . $id . ' not found');
         }
-
         $this->manager->remove($user);
         $this->manager->flush();
-
-        return new Response('usuario ID #' . $id . ' foi excluido com sucesso.', Response::HTTP_OK);
+        return new Response('', Response::HTTP_OK);
     }
-
     private function userToArray(User $user): array
     {
         return [

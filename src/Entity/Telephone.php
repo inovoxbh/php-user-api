@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity()
  */
@@ -19,6 +20,7 @@ final class Telephone
     private User $user;
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="O número de telefone é obrigatório")
      */
     private string $number;
     public function __construct(string $number, User $user)
@@ -33,5 +35,9 @@ final class Telephone
     public function getNumber(): string
     {
         return $this->number;
+    }
+    public function setNumber(string $number): void
+    {
+        $this->number = $number;
     }
 }
