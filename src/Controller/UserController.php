@@ -69,6 +69,11 @@ class UserController extends AbstractController
         $json = json_decode($requestContent, true);
 
         $user = $this->manager->getRepository(User::class)->find($id);
+
+        if (null === $user) {
+            throw $this->createNotFoundException('User with ID #' . $id . ' not found');
+        }
+
         $user->setName($json['name']);
         $user->setEmail($json['email']);
 
@@ -76,6 +81,26 @@ class UserController extends AbstractController
         $this->manager->flush();
 
         return new Response('usuario atualizado com sucesso.', Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/users/{id}", methods={"DELETE"})
+     * @param Request $request
+     * @param int $id
+     * @return Response
+     */
+    public function deleteAction(int $id): Response
+    {
+        $user = $this->manager->getRepository(User::class)->find($id);
+
+        if (null === $user) {
+            throw $this->createNotFoundException('User with ID #' . $id . ' not found');
+        }
+
+        $this->manager->remove($user);
+        $this->manager->flush();
+
+        return new Response('usuario excluido com sucesso.', Response::HTTP_OK);
     }
 
     private function userToArray(User $user): array
