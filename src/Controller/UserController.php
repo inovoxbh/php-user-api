@@ -57,7 +57,8 @@ class UserController extends AbstractController
 
         $id = $user->getId();
         return new Response('usuario ID #' . $id . ' criado com sucesso.', Response::HTTP_CREATED, [
-            'X-User-Id' => $user->getId()
+            'X-User-Id' => $user->getId(),
+            'Location' => '/users/' . $user->getId()
         ]);
     }
 
