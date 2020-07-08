@@ -38,8 +38,11 @@ class UserController extends AbstractController
         }
         return new JsonResponse($this->userToArray($user));
     }
+
     /**
      * @Route("/users", methods={"POST"})
+     * @param Request $request
+     * @return Response
      */
     public function createAction(Request $request): Response
     {
@@ -53,6 +56,28 @@ class UserController extends AbstractController
         $this->manager->flush();
         return new Response('', Response::HTTP_CREATED);
     }
+
+    /**
+     * @Route("/users/{id}", methods={"PUT"})
+     * @param Request $request
+     * @param int $id
+     * @return Response
+     */
+    public function updateAction(Request $request, int $id): Response
+    {
+        $requestContent = $request->getContent();
+        $json = json_decode($requestContent, true);
+
+        $user = $this->manager->getRepository(User::class)->find($id);
+        $user->setName($json['name']);
+        $user->setEmail($json['email']);
+
+        $this->manager->persist($user);
+        $this->manager->flush();
+
+        return new Response('usuario atualizado com sucesso.', Response::HTTP_OK);
+    }
+
     private function userToArray(User $user): array
     {
         return [
