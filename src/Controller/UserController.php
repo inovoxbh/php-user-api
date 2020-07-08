@@ -54,7 +54,7 @@ class UserController extends AbstractController
         }
         $this->manager->persist($user);
         $this->manager->flush();
-        return new Response('', Response::HTTP_CREATED);
+        return new Response('usuario criado com sucesso.', Response::HTTP_CREATED);
     }
 
     /**
@@ -80,7 +80,7 @@ class UserController extends AbstractController
         $this->manager->persist($user);
         $this->manager->flush();
 
-        return new Response('usuario atualizado com sucesso.', Response::HTTP_OK);
+        return new Response('usuario ID #' . $id . ' foi atualizado com sucesso.', Response::HTTP_OK);
     }
 
     /**
@@ -100,7 +100,7 @@ class UserController extends AbstractController
         $this->manager->remove($user);
         $this->manager->flush();
 
-        return new Response('usuario excluido com sucesso.', Response::HTTP_OK);
+        return new Response('usuario ID #' . $id . ' foi excluido com sucesso.', Response::HTTP_OK);
     }
 
     private function userToArray(User $user): array
