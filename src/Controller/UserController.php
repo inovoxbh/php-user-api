@@ -54,7 +54,11 @@ class UserController extends AbstractController
         }
         $this->manager->persist($user);
         $this->manager->flush();
-        return new Response('usuario criado com sucesso.', Response::HTTP_CREATED);
+
+        $id = $user->getId();
+        return new Response('usuario ID #' . $id . ' criado com sucesso.', Response::HTTP_CREATED, [
+            'X-User-Id' => $user->getId()
+        ]);
     }
 
     /**
