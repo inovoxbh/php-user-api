@@ -72,9 +72,9 @@ class UserController extends AbstractController
     {
         $envelope = $this->bus->dispatch(new CreateUserMessage($request));
 
-        $handledStamp = $envelope->last(HandledStamp::class);
-        $handledStamp->getResult();
-        dump($handledStamp->getResult());
+//        $handledStamp = $envelope->last(HandledStamp::class);
+//        $handledStamp->getResult();
+//        dump($handledStamp->getResult());
 
         return new Response('Sucesso []', Response::HTTP_CREATED, [
             //'Location' => '/users/' . $createdUserId
@@ -105,15 +105,6 @@ class UserController extends AbstractController
         $this->manager->persist($user);
         $this->manager->flush();
         return new Response('', Response::HTTP_OK);
-    }
-
-    /**
-     * @Route("/users/{id}", methods={"DELETE"})
-     */
-    public function removeAction(int $id): Response
-    {
-        $this->bus->dispatch(new RemoveUserMessage($id));
-        return new Response('User ID #'. $id . ' removido com sucesso.', Response::HTTP_OK);
     }
 
     private function userToArray(User $user): array
