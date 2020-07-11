@@ -1,24 +1,31 @@
 <?php
+
 namespace App\Controller;
+
 use App\Entity\Telephone;
 use App\Entity\User;
+use App\Message\RemoveUserMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
+    private MessageBusInterface $bus;
+
     private ValidatorInterface $validator;
     private EntityManagerInterface $manager;
-    public function __construct(EntityManagerInterface $manager, ValidatorInterface $validator)
+    public function __construct(EntityManagerInterface $manager, ValidatorInterface $validator, MessageBusInterface $bus)
     {
         $this->manager = $manager;
         $this->validator = $validator;
+        $this->bus = $bus;
     }
 
     /**
@@ -114,13 +121,8 @@ class UserController extends AbstractController
      */
     public function removeAction(int $id): Response
     {
-        $user = $this->manager->getRepository(User::class)->find($id);
-        if (null === $user) {
-            throw $this->createNotFoundException('User with ID #' . $id . ' not found');
-        }
-        $this->manager->remove($user);
-        $this->manager->flush();
-        return new Response('', Response::HTTP_OK);
+        $this->bus->dispatch(new RemoveUserMessage($id));
+        return new Response('User ID #'. $id . ' removido com sucesso.', Response::HTTP_OK);
     }
 
     private function userToArray(User $user): array
