@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Telephone;
 use App\Entity\User;
+use App\Message\CreateUserMessage;
 use App\Message\RemoveUserMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,9 +19,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController extends AbstractController
 {
     private MessageBusInterface $bus;
-
     private ValidatorInterface $validator;
     private EntityManagerInterface $manager;
+
     public function __construct(EntityManagerInterface $manager, ValidatorInterface $validator, MessageBusInterface $bus)
     {
         $this->manager = $manager;
@@ -68,25 +69,12 @@ class UserController extends AbstractController
      */
     public function createAction(Request $request): Response
     {
-        $requestContent = $request->getContent();
-        $json = json_decode($requestContent, true);
-        $user = new User($json['name'], $json['email']);
-        foreach ($json['telephones'] as $telephone) {
-            $user->addTelephone($telephone['number']);
-        }
-        $errors = $this->validator->validate($user);
-        if (count($errors) > 0) {
-            $violations = array_map(fn(ConstraintViolationInterface $violation) => [
-                'property' => $violation->getPropertyPath(),
-                'message' => $violation->getMessage()
-            ], iterator_to_array($errors));
-            return new JsonResponse($violations, Response::HTTP_BAD_REQUEST);
-        }
-        $this->manager->persist($user);
-        $this->manager->flush();
-        // enviar email aqui????
-        return new Response('', Response::HTTP_CREATED, [
-            'Location' => '/users/' . $user->getId()
+        $this->bus->dispatch(new CreateUserMessage($request));
+
+//        return new Response('Inserido com sucesso.', Response::HTTP_CREATED);
+
+        return new Response('com sucesso', Response::HTTP_CREATED, [
+//            'Location' => '/users/' . $id
         ]);
     }
 
