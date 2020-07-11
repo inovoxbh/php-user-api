@@ -20,6 +20,17 @@ class UserController extends AbstractController
         $this->manager = $manager;
         $this->validator = $validator;
     }
+
+    /**
+     * @Route("/", methods={"GET"})
+     */
+    public function homePage(): Response
+    {
+        $response ='bem vindo ao app de usuarios em php.';
+
+        return new JsonResponse($response);
+    }
+
     /**
      * @Route("/users", methods={"GET"})
      */
@@ -32,6 +43,7 @@ class UserController extends AbstractController
         }
         return new JsonResponse($data);
     }
+
     /**
      * @Route("/users/{id}", methods={"GET"})
      */
@@ -43,6 +55,7 @@ class UserController extends AbstractController
         }
         return new JsonResponse($this->userToArray($user));
     }
+
     /**
      * @Route("/users", methods={"POST"})
      */
@@ -69,6 +82,7 @@ class UserController extends AbstractController
             'Location' => '/users/' . $user->getId()
         ]);
     }
+
     /**
      * @Route("/users/{id}", methods={"PUT"})
      */
@@ -94,6 +108,7 @@ class UserController extends AbstractController
         $this->manager->flush();
         return new Response('', Response::HTTP_OK);
     }
+
     /**
      * @Route("/users/{id}", methods={"DELETE"})
      */
@@ -107,6 +122,7 @@ class UserController extends AbstractController
         $this->manager->flush();
         return new Response('', Response::HTTP_OK);
     }
+
     private function userToArray(User $user): array
     {
         return [
