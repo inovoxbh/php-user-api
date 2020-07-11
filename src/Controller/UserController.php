@@ -41,19 +41,6 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/users", methods={"GET"})
-     */
-    public function listAction(): Response
-    {
-        $users = $this->manager->getRepository(User::class)->findAll();
-        $data = [];
-        foreach ($users as $user) {
-            $data[] = $this->userToArray($user);
-        }
-        return new JsonResponse($data);
-    }
-
-    /**
      * @Route("/users/{id}", methods={"GET"})
      */
     public function detailAction(int $id): Response
@@ -63,22 +50,6 @@ class UserController extends AbstractController
             throw $this->createNotFoundException('User with ID #' . $id . ' not found');
         }
         return new JsonResponse($this->userToArray($user));
-    }
-
-    /**
-     * @Route("/users", methods={"POST"})
-     */
-    public function createAction(Request $request): Response
-    {
-        $envelope = $this->bus->dispatch(new CreateUserMessage($request));
-
-//        $handledStamp = $envelope->last(HandledStamp::class);
-//        $handledStamp->getResult();
-//        dump($handledStamp->getResult());
-
-        return new Response('Sucesso []', Response::HTTP_CREATED, [
-            //'Location' => '/users/' . $createdUserId
-        ]);
     }
 
     /**
