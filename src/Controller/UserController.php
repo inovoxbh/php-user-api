@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -69,10 +70,14 @@ class UserController extends AbstractController
      */
     public function createAction(Request $request): Response
     {
-        $this->bus->dispatch(new CreateUserMessage($request));
+        $envelope = $this->bus->dispatch(new CreateUserMessage($request));
 
-        return new Response('Sucesso', Response::HTTP_CREATED, [
-//            'Location' => '/users/' . $id
+        $handledStamp = $envelope->last(HandledStamp::class);
+        $handledStamp->getResult();
+        dump($handledStamp->getResult());
+
+        return new Response('Sucesso []', Response::HTTP_CREATED, [
+            //'Location' => '/users/' . $createdUserId
         ]);
     }
 

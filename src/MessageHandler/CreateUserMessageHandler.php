@@ -22,7 +22,7 @@ final class CreateUserMessageHandler implements MessageHandlerInterface
         $this->validator = $validator;
     }
 
-    public function __invoke(CreateUserMessage $message): User
+    public function __invoke(CreateUserMessage $message): int
     {
         $requestContent = $message->getRequest()->getContent();
         $json = json_decode($requestContent, true);
@@ -42,7 +42,7 @@ final class CreateUserMessageHandler implements MessageHandlerInterface
         $this->manager->persist($user);
         $this->manager->flush();
 
-        return $user;
+        return $user->getId();
 
 //        return new Response('sucesso!!!', Response::HTTP_CREATED, [
 //            'Location' => '/users/' . $user->getId()
