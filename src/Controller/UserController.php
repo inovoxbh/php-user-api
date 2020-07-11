@@ -71,9 +71,7 @@ class UserController extends AbstractController
     {
         $this->bus->dispatch(new CreateUserMessage($request));
 
-//        return new Response('Inserido com sucesso.', Response::HTTP_CREATED);
-
-        return new Response('com sucesso', Response::HTTP_CREATED, [
+        return new Response('Sucesso', Response::HTTP_CREATED, [
 //            'Location' => '/users/' . $id
         ]);
     }
