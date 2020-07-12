@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ORM\Entity()
  */
@@ -18,13 +21,6 @@ class User
 
     /**
      * @ORM\Column()
-     * @Assert\NotBlank(message="O nome do usuário é obrigatório")
-     * @Assert\Length(
-     *     min="5",
-     *     minMessage="O nome do usuário deve conter pelo menos {{ limit }} caracteres.",
-     *     max="10",
-     *     maxMessage="O nome do usuário deve conter no máximo {{ limit }} caracteres."
-     * )
      */
     private ?string $name = null;
 
