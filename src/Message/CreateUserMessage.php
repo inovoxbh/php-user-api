@@ -6,15 +6,29 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class CreateUserMessage
 {
-    private Request $request;
+    private string $name;
+    private string $email;
+    private array $telephones;
 
-    public function __construct(Request $request)
+    public function __construct(String $name, String $email, Array $telephones)
     {
-        $this->request = $request;
+        $this->name = $name;
+        $this->email = $email;
+        $this->telephones = $telephones;
     }
 
-    public function getRequest(): Request
+    public function getName(): String
     {
-        return $this->request;
+        return $this->name;
+    }
+
+    public function getEmail(): String
+    {
+        return $this->email;
+    }
+
+    public function getTelephones(): Array
+    {
+        return $this->telephones;
     }
 }

@@ -24,12 +24,17 @@ final class CreateUserMessageHandler implements MessageHandlerInterface
 
     public function __invoke(CreateUserMessage $message): int
     {
-        $requestContent = $message->getRequest()->getContent();
-        $json = json_decode($requestContent, true);
-        $user = new User($json['name'], $json['email']);
-        foreach ($json['telephones'] as $telephone) {
+        $name = $message->getName();
+        $email = $message->getEmail();
+        $telephones = $message->getTelephones();
+
+        /* instancia classe de usuário */
+        $user = new User($name, $email);
+        foreach ($telephones as $telephone) {
             $user->addTelephone($telephone['number']);
         }
+
+        /* validação */
         $errors = $this->validator->validate($user);
         if (count($errors) > 0) {
             $violations = array_map(fn(ConstraintViolationInterface $violation) => [
@@ -39,9 +44,12 @@ final class CreateUserMessageHandler implements MessageHandlerInterface
 
             throw new \InvalidArgumentException(new JsonResponse($violations));
         }
+
+        /* persistência */
         $this->manager->persist($user);
         $this->manager->flush();
 
+        /* retorno */
         return $user->getId();
 
 //        return new Response('sucesso!!!', Response::HTTP_CREATED, [

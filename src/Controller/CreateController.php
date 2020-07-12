@@ -30,7 +30,13 @@ class CreateController extends AbstractController
      */
     public function createAction(Request $request): Response
     {
-        $envelope = $this->bus->dispatch(new CreateUserMessage($request));
+        /* conteúdo da requisição */
+        $requestContent = $request->getContent();
+
+        /* transforma requisição em json */
+        $json = json_decode($requestContent, true);
+
+        $envelope = $this->bus->dispatch(new CreateUserMessage($json['name'],$json['email'],$json['telephones']));
 
 //        $handledStamp = $envelope->last(HandledStamp::class);
 //        $handledStamp->getResult();
