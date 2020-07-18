@@ -17,24 +17,20 @@ class User
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue()
      */
-    private ?int $id = null;
+    private int $id;
 
     /**
      * @ORM\Column()
      */
-    private ?string $name = null;
+    private string $name;
 
     /**
      * @ORM\Column()
-     * @Assert\NotBlank()
-     * @Assert\Email()
      */
-    private ?string $email = null;
+    private string $email;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Telephone", mappedBy="user", cascade={"ALL"})
-     * @Assert\Count(min="2")
-     * @Assert\Valid()
      */
     private Collection $telephones;
 

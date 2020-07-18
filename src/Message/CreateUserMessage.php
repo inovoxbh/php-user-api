@@ -8,17 +8,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class CreateUserMessage
 {
     /**
-     * @Assert\NotBlank(message="Nome obrigatorio")
+     * @Assert\NotBlank(message="Nome obrigatorio asdf")
      * @Assert\Length(
      *     min="5",
-     *     minMessage="Nome pelo menos {{ limit }} caracteres.",
+     *     minMessage="Nome pelo menos {{ limit }} caracteres asdf.",
      *     max="10",
-     *     maxMessage="Nome no máximo {{ limit }} caracteres."
+     *     maxMessage="Nome no máximo {{ limit }} caracteres fdsa."
      * )
-     * @NotBlank
      */
     private string $name;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     */
     private string $email;
+
+    /**
+     * @Assert\Count(min="2")
+     * @Assert\Valid()
+     */
     private array $telephones;
 
     public function __construct(string $name, string $email, array $telephones)

@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -38,12 +39,11 @@ class CreateController extends AbstractController
 
         $envelope = $this->bus->dispatch(new CreateUserMessage($json['name'],$json['email'],$json['telephones']));
 
-//        $handledStamp = $envelope->last(HandledStamp::class);
-//        $handledStamp->getResult();
-//        dump($handledStamp->getResult());
+        $handledStamp = $envelope->last(HandledStamp::class);
+        $createdId = $handledStamp->getResult();
 
-        return new Response('Sucesso.', Response::HTTP_CREATED, [
-            //'Location' => '/users/' . $createdUserId
+        return new Response('', Response::HTTP_CREATED, [
+            'Location' => '/users/' . $createdId
         ]);
     }
 }

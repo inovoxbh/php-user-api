@@ -34,20 +34,10 @@ final class CreateUserMessageHandler implements MessageHandlerInterface
             $user->addTelephone($telephone['number']);
         }
 
-        /* validação */
-        $errors = $this->validator->validate($user);
-        if (count($errors) > 0) {
-            $violations = array_map(fn(ConstraintViolationInterface $violation) => [
-                'property' => $violation->getPropertyPath(),
-                'message' => $violation->getMessage()
-            ], iterator_to_array($errors));
-
-            throw new \InvalidArgumentException(new JsonResponse($violations));
-        }
-
         /* persistência */
         $this->manager->persist($user);
         $this->manager->flush();
+
 
         /* retorno */
         return $user->getId();
