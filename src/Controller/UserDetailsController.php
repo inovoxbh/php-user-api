@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UsersController extends AbstractController
+class UserDetailsController extends AbstractController
 {
     private EntityManagerInterface $manager;
 
@@ -19,18 +19,16 @@ class UsersController extends AbstractController
         $this->manager = $manager;
     }
 
-
     /**
-     * @Route("/users", methods={"GET"})
+     * @Route("/users/{id}", methods={"GET"})
      */
-    public function listAction(): Response
+    public function detailAction(int $id): Response
     {
-        $users = $this->manager->getRepository(User::class)->findAll();
-        $data = [];
-        foreach ($users as $user) {
-            $data[] = $this->userToArray($user);
+        $user = $this->manager->getRepository(User::class)->find($id);
+        if (null === $user) {
+            throw $this->createNotFoundException('User with ID #' . $id . ' not found');
         }
-        return new JsonResponse($data);
+        return new JsonResponse($this->userToArray($user));
     }
 
     private function userToArray(User $user): array

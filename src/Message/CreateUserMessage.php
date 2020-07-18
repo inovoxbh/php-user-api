@@ -2,18 +2,17 @@
 
 namespace App\Message;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class CreateUserMessage
 {
     /**
-     * @Assert\NotBlank(message="Nome obrigatorio asdf")
+     * @Assert\NotBlank(message="Nome obrigatório (inserção).")
      * @Assert\Length(
      *     min="5",
-     *     minMessage="Nome pelo menos {{ limit }} caracteres asdf.",
+     *     minMessage="Nome deve conter no mínimo {{ limit }} caracteres (inserção).",
      *     max="10",
-     *     maxMessage="Nome no máximo {{ limit }} caracteres fdsa."
+     *     maxMessage="Nome deve conter no máximo {{ limit }} caracteres (inserção)."
      * )
      */
     private string $name;

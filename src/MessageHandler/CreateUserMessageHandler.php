@@ -5,10 +5,7 @@ namespace App\MessageHandler;
 use App\Entity\User;
 use App\Message\CreateUserMessage;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class CreateUserMessageHandler implements MessageHandlerInterface
@@ -38,13 +35,7 @@ final class CreateUserMessageHandler implements MessageHandlerInterface
         $this->manager->persist($user);
         $this->manager->flush();
 
-
-        /* retorno */
+        /* retorno com ID do usuário criado */
         return $user->getId();
-
-//        return new Response('sucesso!!!', Response::HTTP_CREATED, [
-//            'Location' => '/users/' . $user->getId()
-//        ]);
-
     }
 }
