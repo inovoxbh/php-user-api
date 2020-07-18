@@ -25,6 +25,11 @@ final class UpdateUserMessageHandler implements MessageHandlerInterface
         /* busca usuário no banco */
         $user = $this->manager->getRepository(User::class)->find($id);
 
+        /* verifica se usuário existe */
+        if (null === $user) {
+            throw new \InvalidArgumentException('User with ID #' . $id . ' not found for an update.');
+        }
+
         /* atualiza classe em memoria */
         $user->setName($name);
         $user->setEmail($email);

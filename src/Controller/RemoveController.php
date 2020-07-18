@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Message\RemoveUserMessage;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -12,11 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class RemoveController extends AbstractController
 {
     private MessageBusInterface $bus;
-    private EntityManagerInterface $manager;
 
-    public function __construct(EntityManagerInterface $manager, MessageBusInterface $bus)
+    public function __construct(MessageBusInterface $bus)
     {
-        $this->manager = $manager;
         $this->bus = $bus;
     }
 

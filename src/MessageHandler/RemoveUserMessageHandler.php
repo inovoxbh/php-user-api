@@ -21,7 +21,7 @@ final class RemoveUserMessageHandler implements MessageHandlerInterface
         $user = $this->manager->getRepository(User::class)->find($message->getUserId());
 
         if (null === $user) {
-            throw new \InvalidArgumentException('User with ID #' . $message->getUserId() . ' not found');
+            throw new \InvalidArgumentException('User with ID #' . $message->getUserId() . ' not found to be removed.');
         }
 
         $this->manager->remove($user);

@@ -14,11 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class UpdateController extends AbstractController
 {
     private MessageBusInterface $bus;
-    private EntityManagerInterface $manager;
 
-    public function __construct(EntityManagerInterface $manager, MessageBusInterface $bus)
+    public function __construct(MessageBusInterface $bus)
     {
-        $this->manager = $manager;
         $this->bus = $bus;
     }
 
@@ -32,12 +30,6 @@ class UpdateController extends AbstractController
 
         /* transforma requisição em json */
         $json = json_decode($requestContent, true);
-
-        /* verifica se usuário existe */
-        $user = $this->manager->getRepository(User::class)->find($id);
-        if (null === $user) {
-            throw $this->createNotFoundException('User with ID #' . $id . ' not found for a update.');
-        }
 
         /* bus de atualização */
         $this->bus->dispatch(new UpdateUserMessage($id,$json['name'],$json['email']));

@@ -4,4 +4,4 @@
 
 ### PHP
 
-Projeto 02: utilização do create-project, twig, retorno em html e json.
+Projeto 02: CRUD em uma API de usuários utilizando conceito de MessageBusInterface, middleware de validações, segregação de controllers conforme as rotas.
